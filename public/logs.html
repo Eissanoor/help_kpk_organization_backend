@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server Logs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    pre {
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      padding: 10px;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Server Logs</h1>
+  <button id="fetchLogs">Fetch Logs</button>
+  <pre id="logOutput">Click "Fetch Logs" to view the server logs.</pre>
+
+  <script>
+    document.getElementById('fetchLogs').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/logs'); // Fetch logs from the server
+        if (!response.ok) throw new Error('Failed to fetch logs');
+
+        const logs = await response.json(); // Parse the JSON logs
+        document.getElementById('logOutput').textContent = JSON.stringify(logs, null, 2); // Pretty-print JSON
+      } catch (error) {
+        document.getElementById('logOutput').textContent = `Error: ${error.message}`;
+        document.getElementById('logOutput').classList.add('error');
+      }
+    });
+  </script>
+</body>
+</html>
