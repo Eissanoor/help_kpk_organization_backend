@@ -26,7 +26,8 @@ const userSchema = new Schema({
   },
   password: String,
   status: Number,
-  location: String
+  location: String,
+  phonenumber:String
 });
 
 userSchema.pre('save', async function(next) {

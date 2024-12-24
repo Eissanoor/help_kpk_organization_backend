@@ -1,12 +1,11 @@
 var dotenv = require("dotenv");
-const passport = require('passport');
-const session = require('express-session');
+
 const User = require('../models/userModel');
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { successResponse, errorResponse } = require('../utils/responseHandler');
+const   sendResponse  = require('../utils/responseHandler');
 dotenv.config({ path: "./config.env" });
 
 
@@ -15,24 +14,28 @@ const addUser = async (req, res) => {
     username, 
     email, 
     password, 
-    location,  
-   
+    location,
+    phonenumber  
+    
   } = req.body;
   // Validate basic required fields
   if (!username) {
-    return res.status(400).json({ error: 'Username is required' });
+    return sendResponse(res, 400, false, 'Username is required');
   }
   if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
+    return sendResponse(res, 400, false, 'Email is required');
   }
   if (!password) {
-    return res.status(400).json({ error: 'Password is required' });
+    return sendResponse(res, 400, false, 'Password is required');
+  }
+  if (!phonenumber) {
+    return sendResponse(res, 400, false, 'Phone number is required');
   }
   try {
     // Check if the email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: 'Email already exists' });
+      return sendResponse(res, 400, false, 'Email already exists');
     }
     // Create new user object
     const newUser = new User({
@@ -41,13 +44,14 @@ const addUser = async (req, res) => {
       password,
       status: 1,
       location,
+      phonenumber
     });
 
     // Save the user to the database
     await newUser.save();
-    return successResponse(res, 201, newUser);
+    return sendResponse(res, 200, true, 'User has been added successfully', newUser);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    return sendResponse(res, 500, false, error.message);
   }
 };
 
@@ -55,164 +59,39 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
+    return sendResponse(res, 400, false, 'Email is required');
   }
 
   if (!password) {
-    return res.status(400).json({ error: 'Password is required' });
+    return sendResponse(res, 400, false, 'Password is required');
   }
 
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      return sendResponse(res, 400, false, 'Invalid email or password');
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      return sendResponse(res, 400, false, 'Invalid email or password');
     }
 
     const payload = { id: user.id, email: user.email };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
 
-    return successResponse(res, 200, { token, user });
+    return sendResponse(res, 200, true, 'User logged in successfully', { token });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    return sendResponse(res, 500, false, error.message);
   }
 };
-const updateUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { 
-      username, 
-      email, 
-      password, 
-      dateOfBirth, 
-      aboutMe, 
-      status, 
-      phone, 
-      address, 
-      isGemstone, 
-      id_cardNo, 
-      taxNo 
-    } = req.body;
 
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    let imagePath = user.image;
-    let pictureBusinessCertificatePath = user.pictureBusinessCertificate;
-    let frontImagePath = user.frontImage;
-    let backImagePath = user.backImage;
-
-    // Handle new image uploads
-    if (req.files) {
-      // Handle profile image
-      if (req.files["image"] && req.files["image"][0]) {
-        if (user.image) {
-          const oldImagePath = path.join(__dirname, '..', user.image);
-          fs.unlink(oldImagePath, (err) => {
-            if (err) console.error("Error deleting old image:", err);
-          });
-        }
-        imagePath = `/uploads/${req.files["image"][0].filename}`;
-      }
-
-      // Handle business certificate image
-      if (req.files["pictureBusinessCertificate"] && req.files["pictureBusinessCertificate"][0]) {
-        if (user.pictureBusinessCertificate) {
-          const oldCertificatePath = path.join(__dirname, '..', user.pictureBusinessCertificate);
-          fs.unlink(oldCertificatePath, (err) => {
-            if (err) console.error("Error deleting old business certificate:", err);
-          });
-        }
-        pictureBusinessCertificatePath = `/uploads/${req.files["pictureBusinessCertificate"][0].filename}`;
-      }
-
-      // Handle front image
-      if (req.files["frontImage"] && req.files["frontImage"][0]) {
-        if (user.frontImage) {
-          const oldFrontImagePath = path.join(__dirname, '..', user.frontImage);
-          fs.unlink(oldFrontImagePath, (err) => {
-            if (err) console.error("Error deleting old front image:", err);
-          });
-        }
-        frontImagePath = `/uploads/${req.files["frontImage"][0].filename}`;
-      }
-
-      // Handle back image
-      if (req.files["backImage"] && req.files["backImage"][0]) {
-        if (user.backImage) {
-          const oldBackImagePath = path.join(__dirname, '..', user.backImage);
-          fs.unlink(oldBackImagePath, (err) => {
-            if (err) console.error("Error deleting old back image:", err);
-          });
-        }
-        backImagePath = `/uploads/${req.files["backImage"][0].filename}`;
-      }
-    }
-
-    // If isGemstone is true, validate gemstone-related fields
-    if (isGemstone) {
-      if (!id_cardNo) {
-        return res.status(400).json({ error: 'ID card number is required for gemstone users' });
-      }
-      if (!taxNo) {
-        return res.status(400).json({ error: 'Tax number is required for gemstone users' });
-      }
-      if (!pictureBusinessCertificatePath) {
-        return res.status(400).json({ error: 'Business certificate image is required for gemstone users' });
-      }
-      if (!frontImagePath) {
-        return res.status(400).json({ error: 'Front image is required for gemstone users' });
-      }
-      if (!backImagePath) {
-        return res.status(400).json({ error: 'Back image is required for gemstone users' });
-      }
-    }
-
-    // Update user fields
-    user.username = username || user.username;
-    user.email = email || user.email;
-    
-    // Hash password if updated
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
-    }
-    
-    user.dateOfBirth = dateOfBirth || user.dateOfBirth;
-    user.aboutMe = aboutMe || user.aboutMe;
-    user.status = status || user.status;
-    user.phone = phone || user.phone;
-    user.address = address || user.address;
-
-    user.image = imagePath;
-    user.isGemstone = isGemstone !== undefined ? isGemstone : user.isGemstone;
-    user.id_cardNo = isGemstone ? id_cardNo : null;
-    user.taxNo = isGemstone ? taxNo : null;
-    user.pictureBusinessCertificate = isGemstone ? pictureBusinessCertificatePath : null;
-    user.frontImage = isGemstone ? frontImagePath : null;
-    user.backImage = isGemstone ? backImagePath : null;
-
-    // Save updated user
-    const updatedUser = await user.save();
-    return successResponse(res, 200, updatedUser);
-
-  }catch (error) {
-    console.error("Error updating user:", error.message);
-    return errorResponse(res, 500, error.message);
-  }
-};
 const getUsers = async (req, res) => {
   try {
     const users = await User.find();
-    return successResponse(res, 200, users);
+    return sendResponse(res, 200, true,"All Users", users);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    return sendResponse(res, 500, false, error.message);
   }
 };
 const getUserById = async (req, res) => {
@@ -222,12 +101,12 @@ const getUserById = async (req, res) => {
       const user = await User.findById(id);
 
       if (!user) {
-          return res.status(404).json({ error: 'User not found' });
+          return sendResponse(res, 404, false, 'User not found');
       }
 
-      return successResponse(res, 200, user);
+      return sendResponse(res, 200, true,"All User", user);
   } catch (error) {
-      return errorResponse(res, 500, error.message);
+      return sendResponse(res, 500, false, error.message);
   }
 };
 const deleteUser = async (req, res) => {
@@ -238,7 +117,7 @@ const deleteUser = async (req, res) => {
     const user = await User.findById(id);
     
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return sendResponse(res, 404, false, 'User not found');
     }
 
     // Construct the path for the user's image
@@ -257,9 +136,9 @@ const deleteUser = async (req, res) => {
     // Proceed to delete the user
     await User.findByIdAndDelete(id);
 
-    return successResponse(res, 200, { message: 'User deleted successfully' });
+    return sendResponse(res, 200, true, { message: 'User deleted successfully' });
   } catch (error) {
-      return errorResponse(res, 500, error.message);
+      return sendResponse(res, 500, false, error.message);
   }
 };
 const changePassword = async (req, res) => {
@@ -270,68 +149,20 @@ const changePassword = async (req, res) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return sendResponse(res, 404, false, 'User not found');
     }
 
     if (user.password !== currentPassword) {
-      return res.status(400).json({ error: 'Current password is incorrect' });
+      return sendResponse(res, 400, false, 'Current password is incorrect');
     }
 
     user.password = newPassword;
     await user.save();
 
-    return successResponse(res, 200, { message: 'Password changed successfully' });
+    return sendResponse(res, 200, true, { message: 'Password changed successfully' });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    return sendResponse(res, 500, false, error.message);
   }
-};
-
-const loginWithGoogle = (req, res, next) => {
-  passport.authenticate('google', { scope: ['profile', 'email'], state: 'login' })(req, res, next);
-};
-
-
-const signupWithGoogle = (req, res, next) => {
-  passport.authenticate('google', { scope: ['profile', 'email'], state: 'signup' })(req, res, next);
-};
-
-const googleCallback = (req, res, next) => {
-  passport.authenticate('google', async (err, user, info) => {
-    if (err) {
-      console.log(err);
-      return next(err);
-    }
-
-    if (!user) {
-      const status = req.query.state === 'login' ? 0 : 1;
-
-      // Redirect based on the status value
-      if (status === 0) {
-        return res.redirect('https://pakardi.com/SinUpForm');
-      } else if (status === 1) {
-        return res.redirect('https://pakardi.com/LoginForm');
-      }
-
-      const redirectUrl = req.query.state === 'login' ? '/signup' : '/login';
-      return res.redirect(`${process.env.CLIENT_URL}${redirectUrl}?status=${status}`);
-    }
-
-    req.logIn(user, (err) => {
-      if (err) {
-        console.log(err);
-        return next(err);
-      }
-
-      // Generate JWT token with userId included
-      const payload = { id: user._id, email: user.email }; // Include userId in the payload
-      console.log(payload, "------------------");
-
-      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-      // Redirect to client-side dashboard with token in query params
-      res.redirect(`${frontendbaseURL}?token=${token}&userId=${user._id}`);
-    });
-  })(req, res, next);
 };
 
 
@@ -340,14 +171,10 @@ const googleCallback = (req, res, next) => {
 
 // Export functions at the bottom
 module.exports = {
-  updateUser,
   addUser,
   getUsers,
   getUserById,
   deleteUser,
   changePassword,
-  loginWithGoogle,
-  signupWithGoogle,
-  googleCallback,
   loginUser
 };
