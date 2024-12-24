@@ -24,28 +24,9 @@ const userSchema = new Schema({
       message: "Please enter a valid email address."
     }
   },
-  image: String,
   password: String,
-  dateOfBirth: String,
-  aboutMe: String,
   status: Number,
-  phone: String,
-  address: String,
-  isGemstone: {
-    type: Boolean,
-    default: false
-  },
-  id_cardNo: {
-    type: String,
-    trim: true,
-    default: null, // Accept null values
-  },
-  
-  taxNo:Number,
-  pictureBusinessCertificate:String,
-  frontImage:String,
-  backImage:String,
-  // Other user fields can go here
+  location: String
 });
 
 userSchema.pre('save', async function(next) {

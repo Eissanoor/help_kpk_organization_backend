@@ -6,102 +6,48 @@ const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { successResponse, errorResponse } = require('../utils/responseHandler');
 dotenv.config({ path: "./config.env" });
 
 
-const frontendbaseURL = "https://pakardi.com"
 const addUser = async (req, res) => {
   const { 
     username, 
     email, 
     password, 
-    dateOfBirth, 
-    aboutMe, 
-    phone, 
-    address,  
-    id_cardNo, // Remove default placeholder
-    taxNo,
+    location,  
+   
   } = req.body;
-
-  const isGemstone = req.body.isGemstone || false;
-
-  const imagePath = req.files?.image ? `/uploads/${req.files.image[0].filename}` : null;
-  const pictureBusinessCertificate = req.files?.pictureBusinessCertificate 
-    ? `/uploads/${req.files.pictureBusinessCertificate[0].filename}` 
-    : null;
-
-    const frontImage = req.files?.frontImage 
-    ? `/uploads/${req.files.frontImage[0].filename}` 
-    : null;
-
-    const backImage = req.files?.backImage 
-    ? `/uploads/${req.files.backImage[0].filename}` 
-    : null;
-
   // Validate basic required fields
   if (!username) {
     return res.status(400).json({ error: 'Username is required' });
   }
-
   if (!email) {
     return res.status(400).json({ error: 'Email is required' });
   }
-
   if (!password) {
     return res.status(400).json({ error: 'Password is required' });
   }
-
-  // If isGemstone is true, validate the additional fields
-  if (isGemstone) {
-    if (!id_cardNo) {
-      return res.status(400).json({ error: 'ID card number is required for gemstone users' });
-    }
-    if (!taxNo) {
-      return res.status(400).json({ error: 'Tax number is required for gemstone users' });
-    }
-    if (!pictureBusinessCertificate) {
-      return res.status(400).json({ error: 'Business certificate image is required for gemstone users' });
-    }
-    if (!frontImage) {
-      return res.status(400).json({ error: 'frontImage image is required for gemstone users' });
-    }
-    if (!backImage) {
-      return res.status(400).json({ error: 'backImage image is required for gemstone users' });
-    }
-  }
-
   try {
     // Check if the email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already exists' });
     }
-
     // Create new user object
     const newUser = new User({
       username,
       email,
-      image: imagePath,
       password,
-      dateOfBirth,
-      aboutMe,
       status: 1,
-      phone,
-      address,
-   
-      isGemstone,
-      id_cardNo: isGemstone ? id_cardNo : null,
-      taxNo: isGemstone ? taxNo : null,
-      pictureBusinessCertificate: isGemstone ? pictureBusinessCertificate : null,
-      frontImage: isGemstone ? frontImage : null,
-      backImage: isGemstone ? backImage : null
+      location,
     });
 
     // Save the user to the database
     await newUser.save();
-    res.status(201).json(newUser);
+    return successResponse(res, 201, newUser);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -130,9 +76,9 @@ const loginUser = async (req, res) => {
     const payload = { id: user.id, email: user.email };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
 
-    res.json({ token, user });
+    return successResponse(res, 200, { token, user });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 const updateUser = async (req, res) => {
@@ -254,19 +200,19 @@ const updateUser = async (req, res) => {
 
     // Save updated user
     const updatedUser = await user.save();
-    res.status(200).json(updatedUser);
+    return successResponse(res, 200, updatedUser);
 
   }catch (error) {
     console.error("Error updating user:", error.message);
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 const getUsers = async (req, res) => {
   try {
-      const users = await User.find();
-      res.status(200).json(users);
+    const users = await User.find();
+    return successResponse(res, 200, users);
   } catch (error) {
-      res.status(500).json({ error: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 const getUserById = async (req, res) => {
@@ -279,9 +225,9 @@ const getUserById = async (req, res) => {
           return res.status(404).json({ error: 'User not found' });
       }
 
-      res.status(200).json(user);
+      return successResponse(res, 200, user);
   } catch (error) {
-      res.status(500).json({ error: error.message });
+      return errorResponse(res, 500, error.message);
   }
 };
 const deleteUser = async (req, res) => {
@@ -311,9 +257,9 @@ const deleteUser = async (req, res) => {
     // Proceed to delete the user
     await User.findByIdAndDelete(id);
 
-    res.status(200).json({ message: 'User deleted successfully' });
+    return successResponse(res, 200, { message: 'User deleted successfully' });
   } catch (error) {
-      res.status(500).json({ error: error.message });
+      return errorResponse(res, 500, error.message);
   }
 };
 const changePassword = async (req, res) => {
@@ -334,9 +280,9 @@ const changePassword = async (req, res) => {
     user.password = newPassword;
     await user.save();
 
-    res.status(200).json({ message: 'Password changed successfully' });
+    return successResponse(res, 200, { message: 'Password changed successfully' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 

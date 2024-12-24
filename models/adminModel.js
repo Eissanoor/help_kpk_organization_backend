@@ -25,7 +25,6 @@ const adminSchema = new Schema({
     }
   },
   password: String,
-  image: String,
 
 });
 
