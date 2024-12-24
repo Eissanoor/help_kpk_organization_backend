@@ -104,7 +104,7 @@ const getUserById = async (req, res) => {
           return sendResponse(res, 404, false, 'User not found');
       }
 
-      return sendResponse(res, 200, true,"All User", user);
+      return sendResponse(res, 200, true,"get by User", user);
   } catch (error) {
       return sendResponse(res, 500, false, error.message);
   }
