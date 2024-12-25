@@ -28,6 +28,9 @@ const userSchema = new Schema({
   status: Number,
   location: String,
   phonenumber:String
+},
+{
+  timestamps:true
 });
 
 userSchema.pre('save', async function(next) {

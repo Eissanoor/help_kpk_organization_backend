@@ -26,6 +26,9 @@ const adminSchema = new Schema({
   },
   password: String,
 
+},
+{
+  timestamps:true
 });
 
 adminSchema.pre('save', async function(next) {

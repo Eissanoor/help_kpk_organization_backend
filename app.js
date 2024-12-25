@@ -11,6 +11,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require("./routes/adminRoutes");
+const productRoutes = require("./routes/productRoutes")
 const sendResponse = require('./utils/responseHandler'); // Utility function
 
 require("./database/database");
@@ -41,6 +42,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/users', userRoutes);
 app.use("/admin", adminRoutes);
+app.use("/product", productRoutes)
 
 app.get('/', async (req, res) => {
   return sendResponse(res, 200, true, "Welcome to the Home Page");
