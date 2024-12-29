@@ -48,7 +48,32 @@ app.use("/school", schoolRoutes)
 app.get('/', async (req, res) => {
   return sendResponse(res, 200, true, "Welcome to the Home Page");
 });
+// Initialize socket.io with the HTTP server
+const io = new Server(server, {
+  cors: {
+    origin: '*', // Replace '*' with your client URL for better security
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  }
+});
 
+ 
+
+// Set up event listeners for socket.io
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
+
+  // Example event listener for receiving messages
+  socket.on('message', (msg) => {
+    console.log('Message received:', msg);
+    // Broadcast the message to all connected clients
+    io.emit('message', msg);
+  });
+
+  // Handle user disconnection
+  socket.on('disconnect', () => {
+    console.log('A user disconnected:', socket.id);
+  });
+});
 // 404 handler
 app.use((req, res, next) => {
   return sendResponse(res, 404, false, 'Route not found');
