@@ -1,7 +1,7 @@
 var dotenv = require("dotenv");
 const Product = require('../models/productModel');
 const sendResponse = require('../utils/responseHandler');
-const multer = require('multer');
+
 
 dotenv.config({ path: "./config.env" });
 
