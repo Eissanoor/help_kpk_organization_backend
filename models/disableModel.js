@@ -2,6 +2,14 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const disableSchema = new Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
+    productIds: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+    }],
  submittionDate:String,
  registrationNo:String,
  name:String,
@@ -29,10 +37,7 @@ const disableSchema = new Schema({
  presentAddress:String,
  permanentAddress:String,
  
- signatureApplicant:{
-    type: String,
-    required: true
- },
+ 
  applicantIsDeclearYesNo:{
     type: String,
     required: true
@@ -61,6 +66,10 @@ const disableSchema = new Schema({
  },
  recomendationOfBoard_2:{
     type: String,
+ },
+ signatureApplicant:{
+    type: String,
+    required: true
  },
  signatureChainMan:{
     type: String,

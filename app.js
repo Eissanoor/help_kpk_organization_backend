@@ -14,6 +14,7 @@ const adminRoutes = require("./routes/adminRoutes");
 const productRoutes = require("./routes/productRoutes")
 const schoolRoutes = require("./routes/schoolRoutes")
 const locationRoutes = require("./routes/locationRoutes")
+const disableRoutes = require("./routes/disableRoutes")
 const sendResponse = require('./utils/responseHandler'); // Utility function
 
 require("./database/database");
@@ -47,6 +48,7 @@ app.use("/admin", adminRoutes);
 app.use("/product", productRoutes)
 app.use("/school", schoolRoutes)
 app.use("/location", locationRoutes)
+app.use("/disable", disableRoutes)
 app.get('/', async (req, res) => {
   return sendResponse(res, 200, true, "Welcome to the Home Page");
 });
