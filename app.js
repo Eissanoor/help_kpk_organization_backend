@@ -22,7 +22,12 @@ require("./database/database");
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: '*' }));
+app.use(cors({
+  origin: (origin, callback) => {
+    callback(null, true); // Allow all origins
+  },
+  credentials: true // Allow credentials to be included
+}));
 app.use(helmet());
 app.use(morgan('dev'));
 
