@@ -22,7 +22,7 @@ require("./database/database");
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(helmet());
 app.use(morgan('dev'));
 
@@ -55,7 +55,7 @@ app.get('/', async (req, res) => {
 // Initialize socket.io with the HTTP server
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:9020', // Replace '*' with your client URL for better security
+    origin: '*', // Replace '*' with your client URL for better security
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
   }
 });
