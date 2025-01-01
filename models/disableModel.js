@@ -12,7 +12,7 @@ const disableSchema = new Schema({
     }],
  submittionDate:String,
  registrationNo:String,
- name:String,
+ childName:String,
  fatherName:String,
  status:{
     type: String,

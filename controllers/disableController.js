@@ -1,10 +1,11 @@
 var dotenv = require("dotenv");
 const Disable = require('../models/disableModel');
+const School = require('../models/schoolModel');
 const sendResponse = require('../utils/responseHandler');
 
 const addnewdisable = async (req, res) => {
     const { 
-        submittionDate, registrationNo, name, fatherName, status, spouse, 
+        submittionDate, registrationNo, childName, fatherName, status, spouse, 
         cnicNo, dateOfBirth, qulafication, typeOfDisability, nameOfDisability, 
         causeOfDisability, TypeOfJob, sourceOfIncome, appliedFor, phoneNo, 
         presentAddress, permanentAddress, applicantIsDeclearYesNo, 
@@ -24,7 +25,7 @@ const addnewdisable = async (req, res) => {
     // New validation checks for all required fields
     if (!submittionDate) validationErrors.push('submittionDate is required');
     if (!registrationNo) validationErrors.push('registrationNo is required');
-    if (!name) validationErrors.push('name is required');
+    if (!childName) validationErrors.push('name is required');
     if (!fatherName) validationErrors.push('fatherName is required');
     if (status === 'married' && !spouse) validationErrors.push('spouse is required when status is married');
     if (!status || !['married', 'unmarried'].includes(status)) validationErrors.push('status is required and must be one of: married, unmarried');
@@ -61,7 +62,7 @@ const addnewdisable = async (req, res) => {
     try {
       const newProduct = new Disable({
         userId,
-        submittionDate, registrationNo, name, fatherName, status, spouse, 
+        submittionDate, registrationNo, childName, fatherName, status, spouse, 
         cnicNo, dateOfBirth, qulafication, typeOfDisability, nameOfDisability, 
         causeOfDisability, TypeOfJob, sourceOfIncome, appliedFor, phoneNo, 
         presentAddress, permanentAddress, applicantIsDeclearYesNo, 
@@ -88,8 +89,33 @@ const addnewdisable = async (req, res) => {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
     }
 };
+
+const search = async (req, res) => {
+    const { cnicNo } = req.body;
+
+    if (!cnicNo || !/^\d{5}-\d{7}-\d{1}$/.test(cnicNo)) {
+        return sendResponse(res, 400, false, 'CNIC is required and must be valid XXXXX-XXXXXXX-X');
+    }
+
+    try {
+        const disableRecords = await Disable.find({ cnicNo });
+        const schoolRecords = await School.find({ $or: [{ fatherCnic: cnicNo }, { motherCnic: cnicNo }] });
+        
+        // New check for empty records
+        if (disableRecords.length === 0 && schoolRecords.length === 0) {
+            return sendResponse(res, 200, true, 'Still waiting for alert', []);
+        }
+
+        sendResponse(res, 200, true, 'Search results', {
+            records: [...disableRecords, ...schoolRecords]
+        });
+    } catch (error) {
+        sendResponse(res, 500, false, 'Internal server error', { error: error.message });
+    }
+};
+
 module.exports = {
     addnewdisable,
-    getAlldisable
-    
+    getAlldisable,
+    search
 };

@@ -11,6 +11,7 @@ router.post("/add-new-disable", upload.fields([
     { name: 'signatureSpecialist', maxCount: 1 }
 ]), disableController.addnewdisable)
 router.get("/get-all-disable", disableController.getAlldisable)
+router.post("/search", disableController.search)
 
 
 module.exports = router;
