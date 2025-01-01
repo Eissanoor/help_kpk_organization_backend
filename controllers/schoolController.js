@@ -25,7 +25,8 @@ const addnewschool = async (req, res) => {
         guardianCnic,
         relationWithChild,
         relationContact,
-        guardianAddress
+        guardianAddress,
+        productIds
     } = req.body;
     const image = req.file ? `uploads/${req.file.filename}` : null;
 
@@ -83,7 +84,8 @@ const addnewschool = async (req, res) => {
             guardianCnic,
             relationWithChild,
             relationContact,
-            guardianAddress
+            guardianAddress,
+            productIds
         });
         await newSchool.save();
 

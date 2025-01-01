@@ -25,7 +25,7 @@ const addnewdisable = async (req, res) => {
     // New validation checks for all required fields
     if (!submittionDate) validationErrors.push('submittionDate is required');
     if (!registrationNo) validationErrors.push('registrationNo is required');
-    if (!childName) validationErrors.push('name is required');
+    if (!childName) validationErrors.push('childName is required');
     if (!fatherName) validationErrors.push('fatherName is required');
     if (status === 'married' && !spouse) validationErrors.push('spouse is required when status is married');
     if (!status || !['married', 'unmarried'].includes(status)) validationErrors.push('status is required and must be one of: married, unmarried');
@@ -98,8 +98,8 @@ const search = async (req, res) => {
     }
 
     try {
-        const disableRecords = await Disable.find({ cnicNo });
-        const schoolRecords = await School.find({ $or: [{ fatherCnic: cnicNo }, { motherCnic: cnicNo }] });
+        const disableRecords = await Disable.find({ cnicNo }).populate('productIds' , 'productName').select('childName fatherName');
+        const schoolRecords = await School.find({ $or: [{ fatherCnic: cnicNo }, { motherCnic: cnicNo }] }).populate('productIds' , 'productName').select('childName fatherName');
         
         // New check for empty records
         if (disableRecords.length === 0 && schoolRecords.length === 0) {

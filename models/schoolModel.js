@@ -6,6 +6,10 @@ userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
 },
+productIds: [{
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Product",
+}],
  image: { type: String },
  childName: { type: String, required: true },
  fatherName: { type: String, required: true },
