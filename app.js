@@ -24,13 +24,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin:"http://localhost:5173",
+    origin:["http://localhost:5173","https://registration-project-gamma.vercel.app","https://help-kpk-organization-frontend.vercel.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.options("http://localhost:5173", cors());
+
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
