@@ -101,7 +101,7 @@ const getUserById = async (req, res) => {
   const { id } = req.params;
 
   try {
-      const user = await User.findById(id);
+      const user = await User.findById(id).populate("locationId", "locationName");
 
       if (!user) {
           return sendResponse(res, 404, false, 'User not found');
@@ -168,6 +168,36 @@ const changePassword = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const { username, password, locationId, phonenumber } = req.body;
+
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return sendResponse(res, 404, false, 'User not found');
+    }
+
+    // Update user fields, excluding email
+    user.username = username || user.username;
+    user.locationId = locationId || user.locationId;
+    user.phonenumber = phonenumber || user.phonenumber;
+
+    // Hash the password if it's provided
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    await user.save();
+
+    return sendResponse(res, 200, true, 'User updated successfully', user);
+  } catch (error) {
+    return sendResponse(res, 500, false, error.message);
+  }
+};
+
 
 
 
@@ -179,5 +209,6 @@ module.exports = {
   getUserById,
   deleteUser,
   changePassword,
-  loginUser
+  loginUser,
+  updateUser
 };
