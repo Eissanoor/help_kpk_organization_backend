@@ -14,7 +14,7 @@ const addUser = async (req, res) => {
     username, 
     email, 
     password, 
-    location,
+    locationId,
     phonenumber  
     
   } = req.body;
@@ -31,6 +31,9 @@ const addUser = async (req, res) => {
   if (!phonenumber) {
     return sendResponse(res, 400, false, 'Phone number is required');
   }
+  if (!locationId) {
+    return sendResponse(res, 400, false, 'location is required');
+  }
   try {
     // Check if the email already exists
     const existingUser = await User.findOne({ email });
@@ -43,7 +46,7 @@ const addUser = async (req, res) => {
       email,
       password,
       status: 1,
-      location,
+      locationId,
       phonenumber
     });
 
@@ -88,7 +91,7 @@ const loginUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().populate("locationId", "locationName");
     return sendResponse(res, 200, true,"All Users", users);
   } catch (error) {
     return sendResponse(res, 500, false, error.message);

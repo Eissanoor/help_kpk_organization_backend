@@ -26,7 +26,10 @@ const userSchema = new Schema({
   },
   password: String,
   status: Number,
-  location: String,
+  locationId: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Location",
+}],
   phonenumber:String
 },
 {
