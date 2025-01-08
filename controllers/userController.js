@@ -183,12 +183,9 @@ const updateUser = async (req, res) => {
     user.username = username || user.username;
     user.locationId = locationId || user.locationId;
     user.phonenumber = phonenumber || user.phonenumber;
-
+    user.password = password || user.password;
     // Hash the password if it's provided
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
-    }
+    
 
     await user.save();
 
