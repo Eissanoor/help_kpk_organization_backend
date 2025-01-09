@@ -26,12 +26,26 @@ const addnewschool = async (req, res) => {
         relationWithChild,
         relationContact,
         guardianAddress,
-        productIds
+        productIds,
+       
     } = req.body;
-    const image = req.file ? `uploads/${req.file.filename}` : null;
-
+   
+    const image = req.files['image'] ? `uploads/${req.files['image'][0].filename}` : null;
+    const childThumbPrint = req.files['childThumbPrint'] ? `uploads/${req.files['childThumbPrint'][0].filename}` : null;
+    const guardianSignature = req.files['guardianSignature'] ? `uploads/${req.files['guardianSignature'][0].filename}` : null;
+    const applicationSignaturePerCnic = req.files['applicationSignaturePerCnic'] ? `uploads/${req.files['applicationSignaturePerCnic'][0].filename}` : null;
+    const applicationSignatureCurrent = req.files['applicationSignatureCurrent'] ? `uploads/${req.files['applicationSignatureCurrent'][0].filename}` : null;
+    const signatureFSW = req.files['signatureFSW'] ? `uploads/${req.files['signatureFSW'][0].filename}` : null;
+    const signatureFS = req.files['signatureFS'] ? `uploads/${req.files['signatureFS'][0].filename}` : null;
+    const signaturePD = req.files['signaturePD'] ? `uploads/${req.files['signaturePD'][0].filename}` : null;
+    const signatureChairmanHelper = req.files['signatureChairmanHelper'] ? `uploads/${req.files['signatureChairmanHelper'][0].filename}` : null;
     // Collect validation errors one by one
     const validationErrors = [];
+    if (!image) validationErrors.push('Image is required');
+    if (!childThumbPrint) validationErrors.push('Child thumb print is required');
+    if (!guardianSignature) validationErrors.push('Guardian signature is required');
+    if (!applicationSignaturePerCnic) validationErrors.push('Application signature per CNIC is required');
+    if (!applicationSignatureCurrent) validationErrors.push('Application signature current is required');
     if (!userId) validationErrors.push('userId is required');
     if (!childName) validationErrors.push('Child name is required');
     if (!fatherName) validationErrors.push('Father name is required');
@@ -54,6 +68,8 @@ const addnewschool = async (req, res) => {
     if (!relationWithChild) validationErrors.push('Relation with child is required');
     if (!relationContact) validationErrors.push('Relation contact is required');
     if (!guardianAddress) validationErrors.push('Guardian address is required');
+  
+   
 
     // If there are validation errors, return the first one
     if (validationErrors.length > 0) {
@@ -85,7 +101,15 @@ const addnewschool = async (req, res) => {
             relationWithChild,
             relationContact,
             guardianAddress,
-            productIds
+            productIds,
+            childThumbPrint,
+            guardianSignature,
+            applicationSignaturePerCnic,
+            applicationSignatureCurrent,
+            signatureFSW,
+            signatureFS,
+            signaturePD,
+            signatureChairmanHelper
         });
         await newSchool.save();
 
