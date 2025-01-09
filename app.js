@@ -15,6 +15,7 @@ const productRoutes = require("./routes/productRoutes");
 const schoolRoutes = require("./routes/schoolRoutes");
 const locationRoutes = require("./routes/locationRoutes");
 const disableRoutes = require("./routes/disableRoutes");
+const memberRoutes = require("./routes/memberRoutes");
 const sendResponse = require("./utils/responseHandler"); // Utility function
 
 require("./database/database");
@@ -63,6 +64,7 @@ app.use("/product", productRoutes);
 app.use("/school", schoolRoutes);
 app.use("/location", locationRoutes);
 app.use("/disable", disableRoutes);
+app.use("/member", memberRoutes);
 app.get("/", async (req, res) => {
   return sendResponse(res, 200, true, "Welcome to the Home Page");
 });
