@@ -16,11 +16,9 @@ const addnewdisable = async (req, res) => {
 
     // Correctly handle multiple file uploads
     const signatureApplicant = req.files['signatureApplicant'] ? `uploads/${req.files['signatureApplicant'][0].filename}` : null;
-    const signatureChainMan = req.files['signatureChainMan'] ? `uploads/${req.files['signatureChainMan'][0].filename}` : null;
-    const signatureDistricOfficer = req.files['signatureDistricOfficer'] ? `uploads/${req.files['signatureDistricOfficer'][0].filename}` : null;
-    const signatureManager = req.files['signatureManager'] ? `uploads/${req.files['signatureManager'][0].filename}` : null;
-    const signatureSpecialist = req.files['signatureSpecialist'] ? `uploads/${req.files['signatureSpecialist'][0].filename}` : null;
-
+    const cnicFrontPic = req.files['cnicFrontPic'] ? `uploads/${req.files['cnicFrontPic'][0].filename}` : null;
+    const cnicBackPic = req.files['cnicBackPic'] ? `uploads/${req.files['cnicBackPic'][0].filename}` : null;
+   
     const validationErrors = [];
     // New validation checks for all required fields
     if (!submittionDate) validationErrors.push('submittionDate is required');
@@ -68,8 +66,7 @@ const addnewdisable = async (req, res) => {
         presentAddress, permanentAddress, applicantIsDeclearYesNo, 
         disabilityImpairment, fitToWork, typeOfAdvise, referTo, 
         recomendationOfBoard, recomendationOfBoard_1, recomendationOfBoard_2, 
-        signatureApplicant, signatureChainMan, signatureDistricOfficer, 
-        signatureManager, signatureSpecialist,
+        signatureApplicant, cnicFrontPic, cnicBackPic, 
         productIds
       });
   
@@ -81,7 +78,7 @@ const addnewdisable = async (req, res) => {
       });
     }
   };
-  const getAlldisable = async (req, res) => {
+const getAlldisable = async (req, res) => {
     try {
         const disables = await Disable.find().populate('userId', 'username location');
         sendResponse(res, 200, true, 'All disable form', disables);
@@ -114,8 +111,34 @@ const search = async (req, res) => {
     }
 };
 
+const updateProductIds = async (req, res) => {
+    const { id } = req.params;
+    const { productIds } = req.body;
+
+    if (!id) {
+        return sendResponse(res, 400, false, 'ID is required');
+    }
+
+    try {
+        const updatedDisable = await Disable.findByIdAndUpdate(
+            { _id: id },
+            { productIds },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedDisable) {
+            return sendResponse(res, 404, false, 'Disable record not found');
+        }
+
+        sendResponse(res, 200, true, 'Product IDs updated successfully', updatedDisable);
+    } catch (error) {
+        sendResponse(res, 500, false, 'Internal server error', { error: error.message });
+    }
+};
+
 module.exports = {
     addnewdisable,
     getAlldisable,
-    search
+    search,
+    updateProductIds
 };

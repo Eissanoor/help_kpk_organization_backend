@@ -52,6 +52,8 @@ productIds: [{
    politicalAffiliationDescription: String,
    NGO: {type: String, enum: ['yes', 'no']},
    NGODescription: String,
+   cnicFrontPic: String,
+   cnicBackPic: String,
 
 }, {
     timestamps: true

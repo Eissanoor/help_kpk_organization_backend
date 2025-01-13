@@ -57,34 +57,19 @@ productIds: [{
  relationContact: { type: String, required: true },
  guardianAddress: { type: String, required: true },
 
- childThumbPrint:{
-  type: String,
-  required: true
-},
+ 
 guardianSignature:{
   type: String,
   required: true
 
 },
-applicationSignaturePerCnic:{
+cnicFrontPic:{
   type: String,
   required: true
 },
-applicationSignatureCurrent:{
+cnicBackPic:{
   type: String,
   required: true
-},
-signatureFSW:{
-  type: String
-},
-signatureFS:{
-  type: String
-},
-signaturePD:{
-  type: String
-},
-signatureChairmanHelper:{
-  type: String
 }
 
 

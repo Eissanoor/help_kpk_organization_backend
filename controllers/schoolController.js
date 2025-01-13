@@ -31,21 +31,14 @@ const addnewschool = async (req, res) => {
     } = req.body;
    
     const image = req.files['image'] ? `uploads/${req.files['image'][0].filename}` : null;
-    const childThumbPrint = req.files['childThumbPrint'] ? `uploads/${req.files['childThumbPrint'][0].filename}` : null;
+    const cnicFrontPic = req.files['cnicFrontPic'] ? `uploads/${req.files['cnicFrontPic'][0].filename}` : null;
+    const cnicBackPic = req.files['cnicBackPic'] ? `uploads/${req.files['cnicBackPic'][0].filename}` : null;
     const guardianSignature = req.files['guardianSignature'] ? `uploads/${req.files['guardianSignature'][0].filename}` : null;
-    const applicationSignaturePerCnic = req.files['applicationSignaturePerCnic'] ? `uploads/${req.files['applicationSignaturePerCnic'][0].filename}` : null;
-    const applicationSignatureCurrent = req.files['applicationSignatureCurrent'] ? `uploads/${req.files['applicationSignatureCurrent'][0].filename}` : null;
-    const signatureFSW = req.files['signatureFSW'] ? `uploads/${req.files['signatureFSW'][0].filename}` : null;
-    const signatureFS = req.files['signatureFS'] ? `uploads/${req.files['signatureFS'][0].filename}` : null;
-    const signaturePD = req.files['signaturePD'] ? `uploads/${req.files['signaturePD'][0].filename}` : null;
-    const signatureChairmanHelper = req.files['signatureChairmanHelper'] ? `uploads/${req.files['signatureChairmanHelper'][0].filename}` : null;
+    
     // Collect validation errors one by one
     const validationErrors = [];
     if (!image) validationErrors.push('Image is required');
-    if (!childThumbPrint) validationErrors.push('Child thumb print is required');
     if (!guardianSignature) validationErrors.push('Guardian signature is required');
-    if (!applicationSignaturePerCnic) validationErrors.push('Application signature per CNIC is required');
-    if (!applicationSignatureCurrent) validationErrors.push('Application signature current is required');
     if (!userId) validationErrors.push('userId is required');
     if (!childName) validationErrors.push('Child name is required');
     if (!fatherName) validationErrors.push('Father name is required');
@@ -68,7 +61,8 @@ const addnewschool = async (req, res) => {
     if (!relationWithChild) validationErrors.push('Relation with child is required');
     if (!relationContact) validationErrors.push('Relation contact is required');
     if (!guardianAddress) validationErrors.push('Guardian address is required');
-  
+    if (!cnicFrontPic) validationErrors.push('CNIC front picture is required');
+    if (!cnicBackPic) validationErrors.push('CNIC back picture is required');
    
 
     // If there are validation errors, return the first one
@@ -102,14 +96,9 @@ const addnewschool = async (req, res) => {
             relationContact,
             guardianAddress,
             productIds,
-            childThumbPrint,
             guardianSignature,
-            applicationSignaturePerCnic,
-            applicationSignatureCurrent,
-            signatureFSW,
-            signatureFS,
-            signaturePD,
-            signatureChairmanHelper
+            cnicFrontPic,
+            cnicBackPic,
         });
         await newSchool.save();
 
@@ -128,7 +117,33 @@ const getAllSchool = async (req, res) => {
     }
 };
 
+const updateProductIds = async (req, res) => {
+        const { id } = req.params;
+        const { productIds } = req.body;
+
+    // Validate input
+    if (!id) return sendResponse(res, 400, false, 'id is required');
+    if (!productIds) return sendResponse(res, 400, false, 'Product IDs are required');
+
+    try {
+        const updatedSchool = await School.findByIdAndUpdate(
+            { _id: id },
+            { productIds },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedSchool) {
+            return sendResponse(res, 404, false, 'School not found');
+        }
+
+        sendResponse(res, 200, true, 'Product IDs updated successfully', updatedSchool);
+    } catch (error) {
+        sendResponse(res, 500, false, 'Internal server error', { error: error.message });
+    }
+};
+
 module.exports = {
     addnewschool,
-    getAllSchool
+    getAllSchool,
+    updateProductIds
 };

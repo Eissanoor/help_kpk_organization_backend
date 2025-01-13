@@ -40,6 +40,8 @@ const addNewMember = async (req, res) => {
             NGODescription,
         } = req.body;
 
+        const cnicFrontPic = req.files['cnicFrontPic'] ? `uploads/${req.files['cnicFrontPic'][0].filename}` : null;
+        const cnicBackPic = req.files['cnicBackPic'] ? `uploads/${req.files['cnicBackPic'][0].filename}` : null;
         const validationErrors = [];
         if (!userId) validationErrors.push('userId is required');
         if (!childName) validationErrors.push('Child name is required');
@@ -75,6 +77,8 @@ const addNewMember = async (req, res) => {
         if (politicalAffiliation === 'yes' && !politicalAffiliationDescription) validationErrors.push('Political affiliation description is required when politicalAffiliation is yes');
         if (!NGO || !['yes', 'no'].includes(NGO)) validationErrors.push('NGO is required and must be one of: yes, no');
         if (NGO === 'yes' && !NGODescription) validationErrors.push('NGO description is required when NGO is yes');
+        if (!cnicFrontPic) validationErrors.push('CNIC front picture is required');
+        if (!cnicBackPic) validationErrors.push('CNIC back picture is required');
         // If there are validation errors, return the first one
         if (validationErrors.length > 0) {
             return sendResponse(res, 400, false, validationErrors[0]);
@@ -115,6 +119,8 @@ const addNewMember = async (req, res) => {
             politicalAffiliationDescription,
             NGO,
             NGODescription,
+            cnicFrontPic,
+            cnicBackPic,
         });
 
         await member.save();
@@ -126,16 +132,45 @@ const addNewMember = async (req, res) => {
 }   
 const getMember = async (req, res) => { 
     try {
-        const {userId} = req.body;  
-        const member = await Member.find({userId});
+         
+        const member = await Member.find();
         return sendResponse(res, 200, true, 'Member fetched successfully', member);
     } catch (error) {
         console.log(error);
         return sendResponse(res, 500, false, 'An error occurred while fetching the member', error);
     }
 }
+
+const updateMemberProductIds = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { productIds } = req.body;
+
+        // Validate input
+        if (!id) return sendResponse(res, 400, false, 'id is required');
+        if (!productIds || !Array.isArray(productIds)) return sendResponse(res, 400, false, 'productIds is required and must be an array');
+
+        // Update the member's productIds
+        const member = await Member.findOneAndUpdate(
+            { _id: id },
+            { productIds },
+            { new: true } // Return the updated document
+        );
+
+        if (!member) {
+            return sendResponse(res, 404, false, 'Member not found');
+        }
+
+        return sendResponse(res, 200, true, 'Product IDs updated successfully', member);
+    } catch (error) {
+        console.log(error);
+        return sendResponse(res, 500, false, 'An error occurred while updating product IDs', error);
+    }
+}
+
 module.exports = {
     addNewMember,
-    getMember
+    getMember,
+    updateMemberProductIds
 }
 

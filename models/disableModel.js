@@ -71,19 +71,14 @@ const disableSchema = new Schema({
     type: String,
     required: true
  },
- signatureChainMan:{
+ cnicFrontPic:{
     type: String,
 
  },
- signatureDistricOfficer:{
+ cnicBackPic:{
     type: String,
  },
- signatureManager:{
-    type: String,
- },
- signatureSpecialist:{
-    type: String
- }
+ 
 
   
 
