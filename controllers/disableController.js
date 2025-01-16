@@ -2,8 +2,10 @@ var dotenv = require("dotenv");
 const Disable = require('../models/disableModel');
 const School = require('../models/schoolModel');
 const sendResponse = require('../utils/responseHandler');
+const apicache = require('apicache');
 
 const addnewdisable = async (req, res) => {
+   
     const { 
         submittionDate, registrationNo, childName, fatherName, status, spouse, 
         cnicNo, dateOfBirth, qulafication, typeOfDisability, nameOfDisability, 
@@ -69,7 +71,7 @@ const addnewdisable = async (req, res) => {
         signatureApplicant, cnicFrontPic, cnicBackPic, 
         productIds
       });
-  
+      apicache.clear("/disable/get-all-disable");
       await newProduct.save();
       sendResponse(res, 201, true, "Disable added successfully", newProduct);
     } catch (error) {
@@ -129,7 +131,7 @@ const updateProductIds = async (req, res) => {
         if (!updatedDisable) {
             return sendResponse(res, 404, false, 'Disable record not found');
         }
-
+        apicache.clear("/disable/get-all-disable");
         sendResponse(res, 200, true, 'Product IDs updated successfully', updatedDisable);
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });

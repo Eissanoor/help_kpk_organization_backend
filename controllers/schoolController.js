@@ -101,7 +101,7 @@ const addnewschool = async (req, res) => {
             cnicBackPic,
         });
         await newSchool.save();
-
+        apicache.clear("/school/getallschool");
         sendResponse(res, 201, true, 'School created successfully');
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
@@ -135,7 +135,7 @@ const updateProductIds = async (req, res) => {
         if (!updatedSchool) {
             return sendResponse(res, 404, false, 'School not found');
         }
-
+        apicache.clear("/school/getallschool");
         sendResponse(res, 200, true, 'Product IDs updated successfully', updatedSchool);
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });

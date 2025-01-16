@@ -10,9 +10,9 @@ const cache = apicache.middleware;
 
 router.post('/login', userController.loginUser);
 router.put('/password_change/:id', userController.changePassword)
-router.get('/', userController.getUsers)
+router.get('/', cache('60 minutes'), userController.getUsers)
 router.post('/', userController.addUser)
 router.delete('/:id', userController.deleteUser)
-router.get('/:id', userController.getUserById)
+router.get('/:id', cache('60 minutes'), userController.getUserById)
 router.put('/:id', userController.updateUser)
 module.exports = router;

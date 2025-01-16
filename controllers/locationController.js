@@ -1,7 +1,7 @@
 var dotenv = require("dotenv");
 const Location = require("../models/locationModel");
 const sendResponse = require("../utils/responseHandler");
-
+const apicache = require('apicache');
 const addnewloaction = async (req, res) => {
   const { locationName } = req.body;
 
@@ -13,7 +13,7 @@ const addnewloaction = async (req, res) => {
     const newProduct = new Location({
       locationName,
     });
-
+    apicache.clear("/location/get-all-location");
     await newProduct.save();
     sendResponse(res, 201, true, "location added successfully", newProduct);
   } catch (error) {
@@ -62,6 +62,7 @@ const updateLocation = async (req, res) => {
     if (!updatedLocation) {
       return sendResponse(res, 404, false, "Location not found");
     }
+    apicache.clear("/location/get-all-location");
     sendResponse(res, 200, true, "Location updated successfully", updatedLocation);
   } catch (error) {
     sendResponse(res, 500, false, "Internal server error", {
@@ -77,6 +78,7 @@ const deleteLocation = async (req, res) => {
     if (!deletedLocation) {
       return sendResponse(res, 404, false, "Location not found");
     }
+    apicache.clear("/location/get-all-location");
     sendResponse(res, 200, true, "Location deleted successfully", deletedLocation);
   } catch (error) {
     sendResponse(res, 500, false, "Internal server error", {

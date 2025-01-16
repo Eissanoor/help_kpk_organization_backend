@@ -1,6 +1,6 @@
 const  Member  = require('../models/memberModel');
 const sendResponse = require('../utils/responseHandler');
-
+const apicache = require('apicache');
 const addNewMember = async (req, res) => {
     try {
         const {
@@ -124,7 +124,8 @@ const addNewMember = async (req, res) => {
         });
 
         await member.save();
-        return sendResponse(res, 200, true, 'Member added successfully', member);
+        apicache.clear("/member/getmember");
+        return sendResponse(res, 200, true, 'Member added successfully', null);
     } catch (error) {
         console.log(error);
         return sendResponse(res, 500, false, 'An error occurred while adding the member', error);
@@ -160,7 +161,7 @@ const updateMemberProductIds = async (req, res) => {
         if (!member) {
             return sendResponse(res, 404, false, 'Member not found');
         }
-
+        apicache.clear("/member/getmember");
         return sendResponse(res, 200, true, 'Product IDs updated successfully', member);
     } catch (error) {
         console.log(error);

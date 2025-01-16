@@ -1,7 +1,7 @@
 var dotenv = require("dotenv");
 const Product = require('../models/productModel');
 const sendResponse = require('../utils/responseHandler');
-
+const apicache = require('apicache');
 
 dotenv.config({ path: "./config.env" });
 
@@ -30,6 +30,7 @@ const addProduct = async (req, res) => {
         });
 
         await newProduct.save();
+        apicache.clear("/product/getallproduct");
         sendResponse(res, 201, true, 'Product added successfully', newProduct);
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
@@ -89,7 +90,7 @@ const updateProduct = async (req, res) => {
             productDescription,
             image: newImage || existingProduct.image // Use existing image if newImage is null
         }, { new: true });
-
+        apicache.clear("/product/getallproduct");
         sendResponse(res, 200, true, 'Product updated successfully', updatedProduct);
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
@@ -116,6 +117,7 @@ const deleteProduct = async (req, res) => {
             });
         }
 
+        apicache.clear("/product/getallproduct");
         sendResponse(res, 200, true, 'Product deleted successfully');
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });

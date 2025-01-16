@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const   sendResponse  = require('../utils/responseHandler');
 dotenv.config({ path: "./config.env" });
-
+const apicache = require('apicache');
 
 const addUser = async (req, res) => {
   const { 
@@ -52,6 +52,7 @@ const addUser = async (req, res) => {
 
     // Save the user to the database
     await newUser.save();
+    apicache.clear("/user/");
     return sendResponse(res, 200, true, 'User has been added successfully', newUser);
   } catch (error) {
     return sendResponse(res, 500, false, error.message);
@@ -138,7 +139,7 @@ const deleteUser = async (req, res) => {
 
     // Proceed to delete the user
     await User.findByIdAndDelete(id);
-
+    apicache.clear("/user/");
     return sendResponse(res, 200, true, { message: 'User deleted successfully' });
   } catch (error) {
       return sendResponse(res, 500, false, error.message);
@@ -185,7 +186,7 @@ const updateUser = async (req, res) => {
     user.phonenumber = phonenumber || user.phonenumber;
     user.password = password || user.password;
     // Hash the password if it's provided
-    
+    apicache.clear("/user/");
 
     await user.save();
 
