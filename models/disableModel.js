@@ -79,7 +79,10 @@ const disableSchema = new Schema({
     type: String,
  },
  
-
+ Alter: {
+   type: Boolean,
+   default: false
+},
   
 
 },{

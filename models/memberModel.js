@@ -54,7 +54,10 @@ productIds: [{
    NGODescription: String,
    cnicFrontPic: String,
    cnicBackPic: String,
-
+   Alter: {
+    type: Boolean,
+    default: false
+},
 }, {
     timestamps: true
 });

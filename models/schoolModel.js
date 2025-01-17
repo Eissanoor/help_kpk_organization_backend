@@ -70,9 +70,12 @@ cnicFrontPic:{
 cnicBackPic:{
   type: String,
   required: true
-}
+},
 
-
+Alter: {
+    type: Boolean,
+    default: false
+},
 
 }, {
     timestamps: true

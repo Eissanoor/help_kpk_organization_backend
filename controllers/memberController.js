@@ -134,7 +134,7 @@ const addNewMember = async (req, res) => {
 const getMember = async (req, res) => { 
     try {
          
-        const member = await Member.find();
+        const member = await Member.find({Alter:false});
         return sendResponse(res, 200, true, 'Member fetched successfully', member);
     } catch (error) {
         console.log(error);
@@ -152,9 +152,10 @@ const updateMemberProductIds = async (req, res) => {
         if (!productIds || !Array.isArray(productIds)) return sendResponse(res, 400, false, 'productIds is required and must be an array');
 
         // Update the member's productIds
-        const member = await Member.findOneAndUpdate(
+        const member = await Member.findByIdAndUpdate(
             { _id: id },
             { productIds },
+            { Alter: true },
             { new: true } // Return the updated document
         );
 
