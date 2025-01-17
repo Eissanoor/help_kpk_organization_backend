@@ -1,7 +1,7 @@
 var dotenv = require("dotenv");
 const  School  = require('../models/schoolModel');
 const sendResponse = require('../utils/responseHandler');
-
+const apicache = require('apicache');
 const addnewschool = async (req, res) => {
     const { 
         userId,
