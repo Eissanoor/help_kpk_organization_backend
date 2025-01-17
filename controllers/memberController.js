@@ -154,8 +154,7 @@ const updateMemberProductIds = async (req, res) => {
         // Update the member's productIds
         const member = await Member.findByIdAndUpdate(
             { _id: id },
-            { productIds },
-            { Alter: true },
+            { $set: { Alter: true, productIds } },
             { new: true } // Return the updated document
         );
 

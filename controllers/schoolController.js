@@ -128,8 +128,7 @@ const updateProductIds = async (req, res) => {
     try {
         const updatedSchool = await School.findByIdAndUpdate(
             { _id: id },
-            { productIds },
-            { Alter: true },
+            { $set: { Alter: true, productIds } },
             { new: true } // Return the updated document
         );
 
