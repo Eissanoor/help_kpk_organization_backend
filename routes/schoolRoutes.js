@@ -10,6 +10,6 @@ router.post('/addnewschool', upload.fields([
     { name: 'cnicFrontPic', maxCount: 1 },
     { name: 'cnicBackPic', maxCount: 1 }
 ]), schoolController.addnewschool)
-router.get("/getallschool", cache('60 minutes'), schoolController.getAllSchool )
+router.get("/getallschool", schoolController.getAllSchool )
 router.put("/updateschoolproductids/:id", schoolController.updateProductIds)
 module.exports = router;

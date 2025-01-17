@@ -8,7 +8,7 @@ router.post('/addnewmember', upload.fields([
     { name: 'cnicFrontPic', maxCount: 1 },
     { name: 'cnicBackPic', maxCount: 1 }
 ]), memberController.addNewMember);
-router.get('/getmember', cache('60 minutes'), memberController.getMember);
+router.get('/getmember', memberController.getMember);
 router.put('/updatememberproductids/:id', memberController.updateMemberProductIds);
 
 module.exports = router;
