@@ -141,9 +141,17 @@ const updateProductIds = async (req, res) => {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
     }
 };
-
+const getAllAlterSchool = async (req, res) => {
+    try {
+        const schools = await School.find({Alter:true}).populate('userId', 'username location');
+        sendResponse(res, 200, true, 'All school form', schools);
+    } catch (error) {
+        sendResponse(res, 500, false, 'Internal server error', { error: error.message });
+    }
+};
 module.exports = {
     addnewschool,
     getAllSchool,
-    updateProductIds
+    updateProductIds,
+    getAllAlterSchool
 };

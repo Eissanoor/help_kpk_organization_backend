@@ -168,10 +168,20 @@ const updateMemberProductIds = async (req, res) => {
         return sendResponse(res, 500, false, 'An error occurred while updating product IDs', error);
     }
 }
-
+const getAllAlterMember = async (req, res) => { 
+    try {
+         
+        const member = await Member.find({Alter:true});
+        return sendResponse(res, 200, true, 'Member fetched successfully', member);
+    } catch (error) {
+        console.log(error);
+        return sendResponse(res, 500, false, 'An error occurred while fetching the member', error);
+    }
+}
 module.exports = {
     addNewMember,
     getMember,
-    updateMemberProductIds
+    updateMemberProductIds,
+    getAllAlterMember
 }
 

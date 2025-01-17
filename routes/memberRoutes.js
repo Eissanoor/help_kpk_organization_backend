@@ -10,5 +10,6 @@ router.post('/addnewmember', upload.fields([
 ]), memberController.addNewMember);
 router.get('/getmember', memberController.getMember);
 router.put('/updatememberproductids/:id', memberController.updateMemberProductIds);
+router.get('/get-all-alter-member', memberController.getAllAlterMember);
 
 module.exports = router;

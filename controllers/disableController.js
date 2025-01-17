@@ -139,9 +139,19 @@ const updateProductIds = async (req, res) => {
     }
 };
 
+const getAllAlterDisable = async (req, res) => {
+    try {
+        const alters = await Disable.find({ Alter: true }).populate('userId', 'username location');
+        sendResponse(res, 200, true, 'All alter disable forms', alters);
+    } catch (error) {
+        sendResponse(res, 500, false, 'Internal server error', { error: error.message });
+    }
+};
+
 module.exports = {
     addnewdisable,
     getAlldisable,
     search,
-    updateProductIds
+    updateProductIds,
+    getAllAlterDisable
 };
