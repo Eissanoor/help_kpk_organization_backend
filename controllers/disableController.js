@@ -124,8 +124,7 @@ const updateProductIds = async (req, res) => {
     try {
         const updatedDisable = await Disable.findByIdAndUpdate(
             { _id: id },
-            { productIds },
-            { Alter: true },
+            { $set: { Alter: true, productIds } },
             { new: true } // Return the updated document
         );
 
