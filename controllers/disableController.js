@@ -82,7 +82,7 @@ const addnewdisable = async (req, res) => {
   };
 const getAlldisable = async (req, res) => {
     try {
-        const disables = await Disable.find().populate('userId', 'username location');
+        const disables = await Disable.find({Alter:false}).populate('userId', 'username location');
         sendResponse(res, 200, true, 'All disable form', disables);
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });

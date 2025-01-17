@@ -110,7 +110,7 @@ const addnewschool = async (req, res) => {
 
 const getAllSchool = async (req, res) => {
     try {
-        const schools = await School.find().populate('userId', 'username location');
+        const schools = await School.find({Alter:false}).populate('userId', 'username location');
         sendResponse(res, 200, true, 'All school form', schools);
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
