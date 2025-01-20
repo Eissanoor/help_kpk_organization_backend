@@ -13,5 +13,6 @@ router.get("/get-all-disable",  disableController.getAlldisable)
 router.get("/get-all-alter-disable",  disableController.getAllAlterDisable)
 router.post("/search", disableController.search)
 router.put("/updateproductids/:id", disableController.updateProductIds)
+router.delete("/delete-disable/:id", disableController.deleteDisable)
 
 module.exports = router;

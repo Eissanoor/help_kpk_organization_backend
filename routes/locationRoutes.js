@@ -7,6 +7,6 @@ router.get("/get-all-location",  locationController.getAllLocations)
 router.get("/get-by-id/:id", locationController.getLocationById)
 router.post("/add-new-location", locationController.addnewloaction)
 router.put("/update-location/:id", locationController.updateLocation)
-router.delete("/delete-location", locationController.deleteLocation)
+router.delete("/delete-location/:id", locationController.deleteLocation)
 
 module.exports = router;

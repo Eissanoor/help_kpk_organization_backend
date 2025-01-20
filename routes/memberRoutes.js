@@ -11,5 +11,5 @@ router.post('/addnewmember', upload.fields([
 router.get('/getmember', memberController.getMember);
 router.put('/updatememberproductids/:id', memberController.updateMemberProductIds);
 router.get('/get-all-alter-member', memberController.getAllAlterMember);
-
+router.delete("/delete-member/:id", memberController.deleteMember)
 module.exports = router;

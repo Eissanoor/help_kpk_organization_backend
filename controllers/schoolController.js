@@ -149,9 +149,27 @@ const getAllAlterSchool = async (req, res) => {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
     }
 };
+const deleteSchool = async (req, res) => {
+    const { id } = req.params;
+
+    // Validate input
+    if (!id) return sendResponse(res, 400, false, 'id is required');
+
+    try {
+        // Proceed to delete the school
+        await School.findByIdAndDelete(id);
+        apicache.clear("/school/getallschool");
+        return sendResponse(res, 200, true,  'School deleted successfully' );
+    } catch (error) {
+        return sendResponse(res, 500, false, error.message);
+    }
+};
+
+
 module.exports = {
     addnewschool,
     getAllSchool,
     updateProductIds,
-    getAllAlterSchool
+    getAllAlterSchool,
+    deleteSchool
 };

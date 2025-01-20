@@ -147,10 +147,22 @@ const getAllAlterDisable = async (req, res) => {
     }
 };
 
+const deleteDisable = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Disable.findByIdAndDelete(id);
+        apicache.clear("/disable/get-all-disable");
+        return sendResponse(res, 200, true,  'Disable deleted successfully');
+    } catch (error) {
+        return sendResponse(res, 500, false, error.message);
+    }
+};
+
 module.exports = {
     addnewdisable,
     getAlldisable,
     search,
     updateProductIds,
-    getAllAlterDisable
+    getAllAlterDisable,
+    deleteDisable
 };

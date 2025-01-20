@@ -83,7 +83,10 @@ const disableSchema = new Schema({
    type: Boolean,
    default: false
 },
-  
+isDone: {
+   type: Boolean,
+   default: false
+},
 
 },{
     timestamps:true

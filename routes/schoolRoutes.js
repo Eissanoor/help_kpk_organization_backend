@@ -13,4 +13,5 @@ router.post('/addnewschool', upload.fields([
 router.get("/getallschool", schoolController.getAllSchool )
 router.put("/updateschoolproductids/:id", schoolController.updateProductIds)
 router.get("/get-all-alter-school", schoolController.getAllAlterSchool)
+router.delete("/delete-school/:id", schoolController.deleteSchool)
 module.exports = router;

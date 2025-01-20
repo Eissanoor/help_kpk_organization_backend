@@ -178,10 +178,23 @@ const getAllAlterMember = async (req, res) => {
         return sendResponse(res, 500, false, 'An error occurred while fetching the member', error);
     }
 }
+
+const deleteMember = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Member.findByIdAndDelete(id);
+        apicache.clear("/member/getmember");
+        return sendResponse(res, 200, true,  'Member deleted successfully');
+    } catch (error) {
+        return sendResponse(res, 500, false, error.message);
+    }
+};
+
 module.exports = {
     addNewMember,
     getMember,
     updateMemberProductIds,
-    getAllAlterMember
+    getAllAlterMember,
+    deleteMember
 }
 
