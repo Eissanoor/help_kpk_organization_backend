@@ -1,5 +1,6 @@
 var dotenv = require("dotenv");
 const Disable = require('../models/disableModel');
+const Member = require('../models/memberModel');
 const School = require('../models/schoolModel');
 const sendResponse = require('../utils/responseHandler');
 const apicache = require('apicache');
@@ -158,11 +159,56 @@ const deleteDisable = async (req, res) => {
     }
 };
 
+const getAllAlterFormByUserId = async (req, res) => {
+    const { userId } = req.params;
+    const disables = await Disable.find({ userId, Alter: true, isDone: false }).populate('productIds' , 'productName');
+    const members = await Member.find({ userId, Alter: true, isDone: false }).populate('productIds' , 'productName');
+    const schools = await School.find({ userId, Alter: true, isDone: false }).populate('productIds' , 'productName');
+    const allForms = [...disables, ...members, ...schools];
+    return sendResponse(res, 200, true, 'All disables by user ID with Alter true and isDone false', allForms);
+};
+
+const DoneProduct = async (req, res) => {
+    const { id, userId } = req.query;
+
+    if (!id || !userId) {
+        return sendResponse(res, 400, false, 'ID and User ID are required');
+    }
+
+    try {
+        const disable = await Disable.findOne({ _id: id, userId });
+        const member = await Member.findOne({ _id: id, userId });
+        const school = await School.findOne({ _id: id, userId });
+
+        if (!disable && !member && !school) {
+            return sendResponse(res, 404, false, 'No record found');
+        }
+
+        if (disable) {
+            await Disable.findByIdAndUpdate(id, { $set: { isDone: true } });
+        } else if (member) {
+            await Member.findByIdAndUpdate(id, { $set: { isDone: true } });
+        } else if (school) {
+            await School.findByIdAndUpdate(id, { $set: { isDone: true } });
+        }
+
+        sendResponse(res, 200, true, 'Product marked as done');
+    } catch (error) {
+        sendResponse(res, 500, false, 'Internal server error', { error: error.message });
+    }
+};
+
+   
+
+
+
 module.exports = {
     addnewdisable,
     getAlldisable,
     search,
     updateProductIds,
     getAllAlterDisable,
-    deleteDisable
+    deleteDisable,
+    getAllAlterFormByUserId,
+    DoneProduct
 };

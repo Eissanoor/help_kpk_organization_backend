@@ -14,5 +14,6 @@ router.get("/get-all-alter-disable",  disableController.getAllAlterDisable)
 router.post("/search", disableController.search)
 router.put("/updateproductids/:id", disableController.updateProductIds)
 router.delete("/delete-disable/:id", disableController.deleteDisable)
-
+router.get("/get-all-alter-form-by-user-id/:userId", disableController.getAllAlterFormByUserId)
+router.put("/done-product", disableController.DoneProduct)
 module.exports = router;

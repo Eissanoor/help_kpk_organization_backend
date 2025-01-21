@@ -61,7 +61,7 @@ productIds: [{
 isDone: {
     type: Boolean,
     default: false
-},
+}
 }, {
     timestamps: true
 });
