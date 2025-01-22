@@ -17,6 +17,7 @@ productIds: [{
     required: true,
     enum: ['father', 'husband', 'other']
    },
+   guardianName: String,
    relationCnic: String,
    dateOfBirth: String,
    gender: {type: String, enum: ['male', 'female']},

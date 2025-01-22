@@ -8,6 +8,7 @@ const addNewMember = async (req, res) => {
             childName,
             cnicNo,
             relation,
+            guardianName,
             relationCnic,
             dateOfBirth,
             gender,
@@ -45,6 +46,7 @@ const addNewMember = async (req, res) => {
         const validationErrors = [];
         if (!userId) validationErrors.push('userId is required');
         if (!childName) validationErrors.push('Child name is required');
+        if (!guardianName) validationErrors.push('Guardian name is required');
         if (!cnicNo || !/^\d{5}-\d{7}-\d{1}$/.test(cnicNo)) validationErrors.push('CNIC is required and must be valid');
         if (!relation || !['father', 'husband', 'other'].includes(relation)) validationErrors.push('Relation is required and must be one of: father, husband, other');
         if (!relationCnic || !/^\d{5}-\d{7}-\d{1}$/.test(relationCnic)) validationErrors.push('Relation CNIC is required and must be valid');
@@ -88,6 +90,7 @@ const addNewMember = async (req, res) => {
             userId,
             childName,
             cnicNo,
+            guardianName,
             relation,
             relationCnic,
             dateOfBirth,
