@@ -80,6 +80,10 @@ isDone: {
   type: Boolean,
   default: false
 },
+isProof: {
+    type: String,
+    default: false
+},
 }, {
     timestamps: true
 });

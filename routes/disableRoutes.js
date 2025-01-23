@@ -15,5 +15,7 @@ router.post("/search", disableController.search)
 router.put("/updateproductids/:id", disableController.updateProductIds)
 router.delete("/delete-disable/:id", disableController.deleteDisable)
 router.get("/get-all-alter-form-by-user-id/:userId", disableController.getAllAlterFormByUserId)
-router.put("/done-product", disableController.DoneProduct)
+router.put("/done-product", upload.fields([
+    { name: 'isProof', maxCount: 1 }
+]), disableController.DoneProduct)
 module.exports = router;

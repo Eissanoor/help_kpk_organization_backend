@@ -170,6 +170,25 @@ const getAllAlterFormByUserId = async (req, res) => {
 
 const DoneProduct = async (req, res) => {
     const { id, userId } = req.query;
+    if (!req.files['isProof']) {
+        return sendResponse(res, 400, false, 'Proof Image is required');
+    }
+    const isProof = `uploads/${req.files['isProof'][0].filename}`;
+    const disable = await Disable.findOne({ _id: id, userId });
+    const member = await Member.findOne({ _id: id, userId });
+    const school = await School.findOne({ _id: id, userId });
+
+    if (disable) {
+        disable.isProof = isProof;
+        await disable.save();
+    } else if (member) {
+        member.isProof = isProof;
+        await member.save();
+    } else if (school) {
+        school.isProof = isProof;
+        await school.save();
+    }
+
 
     if (!id || !userId) {
         return sendResponse(res, 400, false, 'ID and User ID are required');
