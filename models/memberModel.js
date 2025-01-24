@@ -21,7 +21,7 @@ productIds: [{
    relationCnic: String,
    dateOfBirth: String,
    gender: {type: String, enum: ['male', 'female']},
-   maritalStatus: {type: String, enum: ['single', 'married', 'divorced', 'widowed']},
+   maritalStatus: {type: String, enum: ['single', 'married', 'divorced', 'widow']},
    nationality: String,
    tehsil: String,
    district: String,

@@ -52,7 +52,7 @@ const addNewMember = async (req, res) => {
         if (!relationCnic || !/^\d{5}-\d{7}-\d{1}$/.test(relationCnic)) validationErrors.push('Relation CNIC is required and must be valid');
         if (!dateOfBirth) validationErrors.push('Date of birth is required');
         if (!gender || !['male', 'female'].includes(gender)) validationErrors.push('Gender is required and must be one of: male, female');
-        if (!maritalStatus || !['single', 'married', 'divorced', 'widowed'].includes(maritalStatus)) validationErrors.push('Marital status is required and must be one of: single, married, divorced, widowed');
+        if (!maritalStatus || !['single', 'married', 'divorced', 'widow'].includes(maritalStatus)) validationErrors.push('Marital status is required and must be one of: single, married, divorced, widowed');
         if (!nationality) validationErrors.push('Nationality is required');
         if (!tehsil) validationErrors.push('Tehsil is required');
         if (!district) validationErrors.push('District is required');
