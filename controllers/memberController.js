@@ -39,11 +39,15 @@ const addNewMember = async (req, res) => {
             politicalAffiliationDescription,
             NGO,
             NGODescription,
+            disability,
+            disabilityDescription,
         } = req.body;
 
         const cnicFrontPic = req.files['cnicFrontPic'] ? `uploads/${req.files['cnicFrontPic'][0].filename}` : null;
         const cnicBackPic = req.files['cnicBackPic'] ? `uploads/${req.files['cnicBackPic'][0].filename}` : null;
         const validationErrors = [];
+        
+
         if (!userId) validationErrors.push('userId is required');
         if (!childName) validationErrors.push('Child name is required');
         if (!guardianName) validationErrors.push('Guardian name is required');
@@ -75,6 +79,8 @@ const addNewMember = async (req, res) => {
         if (addictiveDrugs === 'yes' && !addictiveDrugsDescription) validationErrors.push('Addictive drugs description is required when addictiveDrugs is yes');
         if (!anyDisability || !['yes', 'no'].includes(anyDisability)) validationErrors.push('Any disability is required and must be one of: yes, no');
         if (anyDisability === 'yes' && !anyDisabilityDescription) validationErrors.push('Any disability description is required when anyDisability is yes');
+        if (!disability || !['yes', 'no'].includes(disability)) validationErrors.push('Disability is required and must be one of: yes, no');
+        if (disability === 'yes' && !disabilityDescription) validationErrors.push('Disability description is required when disability is yes');
         if (!politicalAffiliation || !['yes', 'no'].includes(politicalAffiliation)) validationErrors.push('Political affiliation is required and must be one of: yes, no');
         if (politicalAffiliation === 'yes' && !politicalAffiliationDescription) validationErrors.push('Political affiliation description is required when politicalAffiliation is yes');
         if (!NGO || !['yes', 'no'].includes(NGO)) validationErrors.push('NGO is required and must be one of: yes, no');
@@ -122,6 +128,8 @@ const addNewMember = async (req, res) => {
             politicalAffiliationDescription,
             NGO,
             NGODescription,
+            disability,
+            disabilityDescription,
             cnicFrontPic,
             cnicBackPic,
         });
