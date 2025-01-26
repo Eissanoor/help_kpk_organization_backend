@@ -45,6 +45,8 @@ productIds: [{
         age: String,
         SchoolName: String
     }],
+    disability: {type: String, enum: ['yes', 'no']},
+   disabilityDescription: String,
    addictiveDrugs: {type: String, enum: ['yes', 'no']},
    addictiveDrugsDescription: String,
    anyDisability: {type: String, enum: ['yes', 'no']},
