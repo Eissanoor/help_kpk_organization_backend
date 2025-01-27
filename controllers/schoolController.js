@@ -109,9 +109,24 @@ const addnewschool = async (req, res) => {
 };
 
 const getAllSchool = async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
     try {
-        const schools = await School.find({Alter:false}).populate('userId', 'username location');
-        sendResponse(res, 200, true, 'All school form', schools);
+        const schools = await School.find({Alter:false})
+            .populate('userId', 'username location')
+            .skip(skip)
+            .limit(parseInt(limit));
+
+        const totalSchools = await School.countDocuments({Alter:false});
+        const totalPages = Math.ceil(totalSchools / limit);
+
+        sendResponse(res, 200, true, 'All school form', {
+            totalSchools,
+            totalPages,
+            currentPage: parseInt(page),
+            schools
+        });
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
     }

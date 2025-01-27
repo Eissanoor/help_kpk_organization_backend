@@ -144,12 +144,23 @@ const addNewMember = async (req, res) => {
 }   
 const getMember = async (req, res) => { 
     try {
-         
-        const member = await Member.find({Alter:false});
-        return sendResponse(res, 200, true, 'Member fetched successfully', member);
+        const { page = 1, limit = 10 } = req.query; // Get page and limit from query parameters
+        const skip = (page - 1) * limit; // Calculate the number of records to skip
+
+        const totalRecords = await Member.countDocuments({ Alter: false }) // Get total records
+        const totalPages = Math.ceil(totalRecords / limit); // Calculate total pages
+
+        const members = await Member.find({ Alter: false }).skip(skip).limit(Number(limit)).populate('userId'); // Fetch paginated members
+
+        return sendResponse(res, 200, true, 'Members fetched successfully', {
+            totalRecords,
+            totalPages,
+            currentPage: Number(page),
+            members
+        });
     } catch (error) {
         console.log(error);
-        return sendResponse(res, 500, false, 'An error occurred while fetching the member', error);
+        return sendResponse(res, 500, false, 'An error occurred while fetching the members', error);
     }
 }
 
