@@ -82,9 +82,24 @@ const addnewdisable = async (req, res) => {
     }
   };
 const getAlldisable = async (req, res) => {
+    const { page = 1, limit = 10 } = req.query; // Add pagination parameters
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
     try {
-        const disables = await Disable.find({Alter:false}).populate('userId', 'username location');
-        sendResponse(res, 200, true, 'All disable form', disables);
+        const disables = await Disable.find({ Alter: false })
+            .populate('userId', 'username location')
+            .skip(skip) // Skip the calculated number of documents
+            .limit(parseInt(limit)); // Limit the number of documents returned
+
+        const totalRecords = await Disable.countDocuments({ Alter: false }); // Get total count for pagination
+        const totalPages = Math.ceil(totalRecords / limit); // Calculate total pages
+
+        sendResponse(res, 200, true, 'All disable form', {
+            disables,
+            totalRecords, // Include total number of records
+            totalPages,
+            currentPage: page,
+        });
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
     }
