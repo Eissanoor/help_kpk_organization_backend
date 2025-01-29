@@ -115,6 +115,7 @@ const search = async (req, res) => {
     try {
         const disableRecords = await Disable.find({ cnicNo }).populate('productIds' , 'productName').select('childName fatherName');
         const schoolRecords = await School.find({ $or: [{ fatherCnic: cnicNo }, { motherCnic: cnicNo }] }).populate('productIds' , 'productName').select('childName fatherName');
+        const memberRecords = await Member.find({ cnicNo }).populate('productIds' , 'productName').select('childName fatherName');
         
         // New check for empty records
         if (disableRecords.length === 0 && schoolRecords.length === 0) {
@@ -122,7 +123,7 @@ const search = async (req, res) => {
         }
 
         sendResponse(res, 200, true, 'Search results', {
-            records: [...disableRecords, ...schoolRecords]
+            records: [...disableRecords, ...schoolRecords, ...memberRecords]
         });
     } catch (error) {
         sendResponse(res, 500, false, 'Internal server error', { error: error.message });
