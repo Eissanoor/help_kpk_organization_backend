@@ -8,8 +8,6 @@ const addnewschool = async (req, res) => {
         childName,
         fatherName,
         fatherCnic,
-        motherName,
-        motherCnic,
         dataOfBirth,
         totalAge,
         bloodGroup,
@@ -43,8 +41,6 @@ const addnewschool = async (req, res) => {
     if (!childName) validationErrors.push('Child name is required');
     if (!fatherName) validationErrors.push('Father name is required');
     if (!fatherCnic || !/^\d{5}-\d{7}-\d{1}$/.test(fatherCnic)) validationErrors.push('Father CNIC is required and must be valid');
-    if (!motherName) validationErrors.push('Mother name is required');
-    if (!motherCnic || !/^\d{5}-\d{7}-\d{1}$/.test(motherCnic)) validationErrors.push('Mother CNIC is required and must be valid');
     if (!dataOfBirth) validationErrors.push('Date of birth is required');
     if (!totalAge) validationErrors.push('Total age is required');
     if (!bloodGroup) validationErrors.push('Blood group is required');
@@ -77,8 +73,6 @@ const addnewschool = async (req, res) => {
             childName,
             fatherName,
             fatherCnic,
-            motherName,
-            motherCnic,
             dataOfBirth,
             totalAge,
             bloodGroup,

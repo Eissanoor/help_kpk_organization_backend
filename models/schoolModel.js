@@ -19,12 +19,7 @@ productIds: [{
   required: true,
   match: [/^\d{5}-\d{7}-\d{1}$/, 'Please fill a valid CNIC number']
  },
- motherName: { type: String, required: true },
- motherCnic: {
-    type: String,
-    required: true,
-    match: [/^\d{5}-\d{7}-\d{1}$/, 'Please fill a valid CNIC number']
-   },
+ 
  dataOfBirth: { type: String, required: true },
  totalAge: { type: String, required: true },
  bloodGroup: { type: String, required: true },
