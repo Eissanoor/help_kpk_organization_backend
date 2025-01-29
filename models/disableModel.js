@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const getNextSerialNo = require('../utils/serialNo');
 const disableSchema = new Schema({
+  serialNo: { type: Number, unique: true },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -96,7 +97,12 @@ isProof: {
     timestamps:true
 });
 
-
+disableSchema.pre('save', async function (next) {
+    if (!this.serialNo) {
+        this.serialNo = await getNextSerialNo('disable');
+    }
+    next();
+});
 
 
 module.exports = mongoose.model("Disable", disableSchema);
