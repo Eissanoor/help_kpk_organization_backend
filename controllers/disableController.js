@@ -11,9 +11,7 @@ const addnewdisable = async (req, res) => {
         submittionDate, registrationNo, childName, fatherName, status, spouse, 
         cnicNo, dateOfBirth, qulafication, typeOfDisability, nameOfDisability, 
         causeOfDisability, TypeOfJob, sourceOfIncome, appliedFor, phoneNo, 
-        presentAddress, permanentAddress, applicantIsDeclearYesNo, 
-        disabilityImpairment, fitToWork, typeOfAdvise, referTo, 
-        recomendationOfBoard, recomendationOfBoard_1, recomendationOfBoard_2, userId,
+        presentAddress, permanentAddress, userId,
         productIds
     } = req.body;
 
@@ -42,12 +40,6 @@ const addnewdisable = async (req, res) => {
     if (!phoneNo) validationErrors.push('phoneNo is required');
     if (!presentAddress) validationErrors.push('presentAddress is required');
     if (!permanentAddress) validationErrors.push('permanentAddress is required');
-    if (applicantIsDeclearYesNo === undefined) validationErrors.push('applicantIsDeclearYesNo is required');
-    if (!disabilityImpairment) validationErrors.push('disability Impairment is required');
-    if (fitToWork === undefined) validationErrors.push('fitToWork is required');
-    if (!typeOfAdvise) validationErrors.push('typeOfAdvise is required');
-    if (!referTo) validationErrors.push('referTo is required');
-    if (!recomendationOfBoard) validationErrors.push('recomendationOfBoard is required');
     if (!userId) validationErrors.push('userId is required');
     
    
@@ -66,9 +58,7 @@ const addnewdisable = async (req, res) => {
         submittionDate, registrationNo, childName, fatherName, status, spouse, 
         cnicNo, dateOfBirth, qulafication, typeOfDisability, nameOfDisability, 
         causeOfDisability, TypeOfJob, sourceOfIncome, appliedFor, phoneNo, 
-        presentAddress, permanentAddress, applicantIsDeclearYesNo, 
-        disabilityImpairment, fitToWork, typeOfAdvise, referTo, 
-        recomendationOfBoard, recomendationOfBoard_1, recomendationOfBoard_2, 
+        presentAddress, permanentAddress, 
         signatureApplicant, cnicFrontPic, cnicBackPic, 
         productIds
       });

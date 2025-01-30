@@ -38,36 +38,6 @@ const disableSchema = new Schema({
  presentAddress:String,
  permanentAddress:String,
  
- 
- applicantIsDeclearYesNo:{
-    type: String,
-    required: true
- },
- disabilityImpairment:{
-    type: String,
-    required: true
- },
- fitToWork:{
-    type: String,
-    required: true
- },
- typeOfAdvise:{
-    type: String,
-    required: true
- },
- referTo:{
-    type: String,
-    
- },
- recomendationOfBoard:{
-    type: String,
- },
- recomendationOfBoard_1:{
-    type: String,
- },
- recomendationOfBoard_2:{
-    type: String,
- },
  signatureApplicant:{
     type: String,
     required: true
